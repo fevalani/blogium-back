@@ -61,19 +61,20 @@ app.get("/posts/:id/comments", (req, res) => {
   res.send(commentsId);
 });
 
-app.post("posts/:id/comments", (req, res) => {
-  const postId = req.params.id;
+app.post("/posts/:id/comments", (req, res) => {
+  const postId = +req.params.id;
   const id = comments.length + 1;
   const commentsIds = comments.filter((item) =>
     item.postId !== id ? true : false
   );
-  comments.push({ ...req.body, postId, id });
+  const obj = { ...req.body, postId, id };
+  comments.push(obj);
   posts.forEach((item) => {
     if (item.id === id) {
       item.commentCount = commentsIds.length;
     }
   });
-  res.send(comments);
+  res.send(obj);
 });
 
 app.listen(4000, () => {
