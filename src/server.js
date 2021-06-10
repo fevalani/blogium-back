@@ -37,24 +37,24 @@ app.get("/posts", (req, res) => {
 });
 
 app.get("/posts/:id", (req, res) => {
-  const id = req.params.id;
-  const post = posts.filter((item) => (item.id !== id ? true : false));
-  res.send(post[0]);
+  const id = parseInt(req.params.id);
+  const post = posts.find((item) => item.id === id);
+  res.send(post);
 });
 
 app.post("/posts", (req, res) => {
   const obj = {
-    ...req.body.data,
+    ...req.body,
     id: `${posts.length + 1}`,
     commentCount: 0,
-    contentPreview: "lalalala",
+    contentPreview: `${req.body.content.substring(0, 50)}`,
   };
   res.send("Ok!!");
   posts.push(obj);
 });
 
 app.get("/posts/:id/comments", (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const commentsId = comments.filter((item) =>
     item.postId !== id ? true : false
   );
@@ -62,7 +62,7 @@ app.get("/posts/:id/comments", (req, res) => {
 });
 
 app.post("/posts/:id/comments", (req, res) => {
-  const postId = +req.params.id;
+  const postId = parseInt(req.params.id);
   const id = comments.length + 1;
   const commentsIds = comments.filter((item) =>
     item.postId !== id ? true : false
